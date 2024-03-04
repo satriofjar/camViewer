@@ -1,0 +1,76 @@
+{
+  "server": {
+    "http_port": ":8888",
+    "ice_servers": ["stun:stun.l.google.com:19302"]
+  },
+  "streams": {
+    "GDN-LT1-001": {
+      "on_demand": true,
+      "url": "rtsp://syno:554bbb3c8f82fec3677650771dc887bc@10.176.255.254:554/Sms=32.unicast"
+    },
+    "GDN-LT1-002": {
+      "on_demand": true,
+      "url": "rtsp://syno:df4d34cd1e0f2f4b186d57ee21a9e76c@10.176.255.254:554/Sms=33.unicast"
+    },
+    "GDN-LT1-003": {
+      "on_demand": true,
+      "url": "rtsp://syno:47835072c8dbc4e2a9ed5d5f18efab23@10.176.255.254:554/Sms=20.unicast"
+    },
+    "GDN-LT1-004": {
+      "on_demand": true,
+      "url": "rtsp://syno:3889ed73969d3ac0d4ce919477a504c4@10.176.255.254:554/Sms=49.unicast"
+    },
+    "GDN-LT1-005": {
+      "on_demand": true,
+      "url": "rtsp://syno:c4c01a18f0319a23fa21d9d26148f53a@10.176.255.254:554/Sms=38.unicast"
+    },
+    "GDN-LT1-006": {
+      "on_demand": true,
+      "url": "rtsp://syno:f95a3a271e3e38f1c0baef6288d186c9@10.176.255.254:554/Sms=9.unicast"
+    },
+    "GDN-LT1-007": {
+      "on_demand": true,
+      "url": "rtsp://syno:03fe7dfef5d2fc9a4711be53e980f3bc@10.176.255.254:554/Sms=31.unicast"
+    },
+    "GDN-LT1-008": {
+      "on_demand": true,
+      "url": "rtsp://syno:15280fe1a6c0402d1c1b385900bb234a@10.176.255.254:554/Sms=50.unicast"
+    },
+    "GDN-LT1-009": {
+      "on_demand": true,
+      "url": "rtsp://syno:06fce57fa647ddb6791d2ade8c41c66d@10.176.255.254:554/Sms=52.unicast"
+    },
+    "GDN-LT1-010": {
+      "on_demand": true,
+      "url": "rtsp://syno:99d640f68052836451c100f662128f03@10.176.255.254:554/Sms=6.unicast"
+    },
+    "GDN-LT1-011": {
+      "on_demand": true,
+      "url": "rtsp://syno:f3387ab8df80196dd5eb6e56c822bc56@10.176.255.254:554/Sms=36.unicast"
+    },
+    "GDN-LT1-012": {
+      "on_demand": true,
+      "url": "rtsp://syno:22584a362cb2a08655a9462281c6200f@10.176.255.254:554/Sms=57.unicast"
+    },
+    "GDN-LT1-013": {
+      "on_demand": true,
+      "url": "rtsp://syno:94baff6ff948e7e5b068bb0f9b6ca022@10.176.255.254:554/Sms=55.unicast"
+    },
+    "GDN-LT1-014": {
+      "on_demand": true,
+      "url": "rtsp://syno:3cee027c5e9b6c72624a65beee4c90d8@10.176.255.254:554/Sms=2.unicast"
+    },
+    "GDN-LT1-016": {
+      "on_demand": true,
+      "url": "rtsp://syno:d10756f1ae16baccfce65c8c073b511c@10.176.255.254:554/Sms=27.unicast"
+    },
+    "GDN-LT1-017": {
+      "on_demand": true,
+      "url": "rtsp://syno:605c999cf59c0a1a3eba07adb22ebd0c@10.176.255.254:554/Sms=5.unicast"
+    },
+    "GDN-LT1-018": {
+      "on_demand": true,
+      "url": "rtsp://syno:cf03a6bffd2d9bc9a3a215d5aaebfe52@10.176.255.254:554/Sms=10.unicast"
+    }
+  }
+}
