@@ -48,9 +48,15 @@
 <aside id="sidebar" class="sidebar">
     <ul class="sidebar-nav" id="sidebar-nav">
         <li class="nav-item">
-            <a class="nav-link" href="">
+            <a class="nav-link collapsed floorLink" href="lantai_1">
                 <i class="bi bi-camera-video"></i>
                 <span>Lantai 1</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed floorLink" href="lantai_2">
+                <i class="bi bi-camera-video"></i>
+                <span>Lantai 2</span>
             </a>
         </li>
     </ul>
@@ -99,11 +105,11 @@
                          </div>
 
                         <div class="col mt-4" style="min-width: 320px;">
-                           <div class="row">
+                           <div id="categoryList" class="row">
                             {{ range .suuidMap }}
                               <a href="{{ . }}" id="{{ . }}" name="{{ . }}" class="list-group-item list-group-item-action">{{ . }}</a>
                             {{ end }}
-                             
+                            
                            </div>
                          </div>
                  
@@ -115,6 +121,9 @@
     </section>
 
   </main>
+
+
+  <ul id="categoryList"></ul>
 
 
 <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>

@@ -12,17 +12,17 @@ import (
 	"github.com/deepch/vdk/av"
 )
 
-//Config global
+// Config global
 var Config = loadConfig()
 
-//ConfigST struct
+// ConfigST struct
 type ConfigST struct {
 	mutex   sync.RWMutex
 	Server  ServerST            `json:"server"`
 	Streams map[string]StreamST `json:"streams"`
 }
 
-//ServerST struct
+// ServerST struct
 type ServerST struct {
 	HTTPPort      string   `json:"http_port"`
 	ICEServers    []string `json:"ice_servers"`
@@ -30,9 +30,10 @@ type ServerST struct {
 	WebRTCPortMax uint16   `json:"webrtc_port_max"`
 }
 
-//StreamST struct
+// StreamST struct
 type StreamST struct {
 	URL      string `json:"url"`
+	FLOOR    string `json:"floor"`
 	Status   bool   `json:"status"`
 	OnDemand bool   `json:"on_demand"`
 	RunLock  bool   `json:"-"`
@@ -189,4 +190,17 @@ func pseudoUUID() (uuid string) {
 	}
 	uuid = fmt.Sprintf("%X-%X-%X-%X-%X", b[0:4], b[4:6], b[6:8], b[8:10], b[10:])
 	return
+}
+
+func (element *ConfigST) ListStreamsByFloor(floor string) []string {
+	element.mutex.Lock()
+	defer element.mutex.Unlock()
+
+	var streams []string
+	for name, stream := range element.Streams {
+		if stream.FLOOR == floor {
+			streams = append(streams, name)
+		}
+	}
+	return streams
 }

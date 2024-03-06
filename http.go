@@ -21,6 +21,7 @@ func serveHTTP() {
 	router := gin.Default()
 	router.LoadHTMLGlob("web/templates/*")
 	router.GET("/", HTTPAPIServerIndex)
+	router.GET("/stream/category/:floor", HTTPAPIServerCategory)
 	router.GET("/stream/player/:uuid", HTTPAPIServerStreamPlayer)
 	router.POST("/stream/receiver/:uuid", HTTPAPIServerStreamWebRTC)
 	router.GET("/stream/codec/:uuid", HTTPAPIServerStreamCodec)
@@ -32,7 +33,7 @@ func serveHTTP() {
 	}
 }
 
-//HTTPAPIServerIndex  index
+// HTTPAPIServerIndex  index
 func HTTPAPIServerIndex(c *gin.Context) {
 	_, all := Config.list()
 	if len(all) > 0 {
@@ -46,7 +47,7 @@ func HTTPAPIServerIndex(c *gin.Context) {
 	}
 }
 
-//HTTPAPIServerStreamPlayer stream player
+// HTTPAPIServerStreamPlayer stream player
 func HTTPAPIServerStreamPlayer(c *gin.Context) {
 	_, all := Config.list()
 	sort.Strings(all)
@@ -58,7 +59,13 @@ func HTTPAPIServerStreamPlayer(c *gin.Context) {
 	})
 }
 
-//HTTPAPIServerStreamCodec stream codec
+func HTTPAPIServerCategory(c *gin.Context) {
+	streams := Config.ListStreamsByFloor(c.Param("floor"))
+	log.Println(streams)
+	c.IndentedJSON(http.StatusOK, streams)
+}
+
+// HTTPAPIServerStreamCodec stream codec
 func HTTPAPIServerStreamCodec(c *gin.Context) {
 	c.Header("Access-Control-Allow-Origin", "*")
 	if Config.ext(c.Param("uuid")) {
@@ -90,7 +97,7 @@ func HTTPAPIServerStreamCodec(c *gin.Context) {
 	}
 }
 
-//HTTPAPIServerStreamWebRTC stream video over WebRTC
+// HTTPAPIServerStreamWebRTC stream video over WebRTC
 func HTTPAPIServerStreamWebRTC(c *gin.Context) {
 	if !Config.ext(c.PostForm("suuid")) {
 		log.Println("Stream Not Found")

@@ -35,6 +35,32 @@ $(document).ready(function() {
 });
 
 
+
+$('.floorLink').click(function(event) {
+  event.preventDefault(); // Mencegah tindakan default dari link
+  var floor = $(this).text(); // Mendapatkan teks dari tag <a> yang diklik
+  console.log(floor);
+  getCategories(floor); // Memanggil fungsi getCategories dengan argumen teks yang didapat
+});
+
+function getCategories(floor){
+  $.get("../category/" + floor, function(data) {
+    try {
+      // data = JSON.stringify(data);
+      console.log(data);
+      var $categoryList = $('#categoryList');
+      $categoryList.empty(); 
+      data.forEach(function(category) {
+        console.log(category);
+        $categoryList.append('<li>' + category + '</li>');
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  });
+}
+
+
 function getCodecInfo() {
   $.get("../codec/" + suuid, function(data) {
     try {
