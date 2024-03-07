@@ -36,6 +36,7 @@ func serveHTTP() {
 // HTTPAPIServerIndex  index
 func HTTPAPIServerIndex(c *gin.Context) {
 	_, all := Config.list()
+	sort.Strings(all)
 	if len(all) > 0 {
 		c.Header("Cache-Control", "no-cache, max-age=0, must-revalidate, no-store")
 		c.Redirect(http.StatusMovedPermanently, "stream/player/"+all[0])
@@ -51,17 +52,21 @@ func HTTPAPIServerIndex(c *gin.Context) {
 func HTTPAPIServerStreamPlayer(c *gin.Context) {
 	_, all := Config.list()
 	sort.Strings(all)
+	some := Config.getFloor(c.Param("uuid"))
+	streams := Config.ListStreamsByFloor(some)
+	sort.Strings(streams)
 	c.HTML(http.StatusOK, "player_copy.tmpl", gin.H{
-		"port":     Config.Server.HTTPPort,
-		"suuid":    c.Param("uuid"),
-		"suuidMap": all,
+		"port":  Config.Server.HTTPPort,
+		"suuid": c.Param("uuid"),
+		// "suuidMap": all,
+		"suuidMap": streams,
 		"version":  time.Now().String(),
 	})
 }
 
 func HTTPAPIServerCategory(c *gin.Context) {
 	streams := Config.ListStreamsByFloor(c.Param("floor"))
-	log.Println(streams)
+	// log.Println(streams)
 	c.IndentedJSON(http.StatusOK, streams)
 }
 

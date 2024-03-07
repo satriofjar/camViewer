@@ -204,3 +204,16 @@ func (element *ConfigST) ListStreamsByFloor(floor string) []string {
 	}
 	return streams
 }
+
+func (element *ConfigST) getFloor(name string) string {
+	element.mutex.Lock()
+	defer element.mutex.Unlock()
+
+	var floor string
+	for k, stream := range element.Streams {
+		if k == name {
+			floor = stream.FLOOR
+		}
+	}
+	return floor
+}
