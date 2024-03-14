@@ -1,9 +1,12 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
+	"os/exec"
 	"sort"
 	"time"
 
@@ -21,8 +24,9 @@ func serveHTTP() {
 	router := gin.Default()
 	router.LoadHTMLGlob("web/templates/*")
 	router.GET("/", HTTPAPIServerIndex)
-	router.GET("/stream/category/:floor", HTTPAPIServerCategory)
+	// router.GET("/stream/category/:floor", HTTPAPIServerCategory)
 	router.GET("/stream/player/:uuid", HTTPAPIServerStreamPlayer)
+	router.GET("/stream/thumbnail/:uuid", HTTPAPIServerThumbnail)
 	router.POST("/stream/receiver/:uuid", HTTPAPIServerStreamWebRTC)
 	router.GET("/stream/codec/:uuid", HTTPAPIServerStreamCodec)
 
@@ -64,11 +68,39 @@ func HTTPAPIServerStreamPlayer(c *gin.Context) {
 	})
 }
 
-func HTTPAPIServerCategory(c *gin.Context) {
-	streams := Config.ListStreamsByFloor(c.Param("floor"))
-	// log.Println(streams)
-	c.IndentedJSON(http.StatusOK, streams)
+func HTTPAPIServerThumbnail(c *gin.Context) {
+	url := Config.getUrl(c.Param("uuid"))
+	if url == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "URL is required"})
+		return
+	}
+
+	thumbnail, err := generateThumbnail(url)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.Data(http.StatusOK, "image/jpeg", thumbnail)
 }
+
+func generateThumbnail(url string) ([]byte, error) {
+	cmd := exec.Command("ffmpeg", "-i", url, "-vf", "thumbnail,scale=320:240", "-frames:v", "1", "-f", "image2", "-")
+	var out bytes.Buffer
+	cmd.Stdout = &out
+	err := cmd.Run()
+	if err != nil {
+		return nil, fmt.Errorf("failed to generate thumbnail: %v", err)
+	}
+
+	return out.Bytes(), nil
+}
+
+// func HTTPAPIServerCategory(c *gin.Context) {
+// 	streams := Config.ListStreamsByFloor(c.Param("floor"))
+// 	// log.Println(streams)
+// 	c.IndentedJSON(http.StatusOK, streams)
+// }
 
 // HTTPAPIServerStreamCodec stream codec
 func HTTPAPIServerStreamCodec(c *gin.Context) {

@@ -29,37 +29,12 @@ async function handleNegotiationNeededEvent() {
   getRemoteSdp();
 }
 
-$(document).ready(function() {
-  $('#' + suuid).addClass('active');
-  getCodecInfo();
-});
-
-
-
-// $('.floorLink').click(function(event) {
-//   event.preventDefault(); // Mencegah tindakan default dari link
-//   // var floor = $(this).text(); // Mendapatkan teks dari tag <a> yang diklik
-//   var floor = $(this).attr('href'); // Mendapatkan teks dari tag <a> yang diklik
-//   // console.log(floor);
-//   getCategories(floor); // Memanggil fungsi getCategories dengan argumen teks yang didapat
+// $(document).ready(function() {
+//   $('#' + suuid).addClass('active');
+//   getCodecInfo();
 // });
 
-// function getCategories(floor){
-//   $.get("../category/" + floor, function(data) {
-//     try {
-//       // data = JSON.stringify(data);
-//       // console.log(data);
-//       var $categoryList = $('#categoryList');
-//       $categoryList.empty(); 
-//       data.forEach(function(camera) {
-//         // console.log(camera);
-//         $categoryList.append(`<a href={camera} id={camera} name={camera} class="list-group-item list-group-item-action">` + camera + '</a>');
-//       });
-//     } catch (e) {
-//       console.log(e);
-//     }
-//   });
-// }
+
 
 
 function getCodecInfo() {

@@ -217,3 +217,16 @@ func (element *ConfigST) getFloor(name string) string {
 	}
 	return floor
 }
+
+func (element *ConfigST) getUrl(name string) string {
+	element.mutex.Lock()
+	defer element.mutex.Unlock()
+
+	var url string
+	for k, stream := range element.Streams {
+		if k == name {
+			url = stream.URL
+		}
+	}
+	return url
+}
