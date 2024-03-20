@@ -29,12 +29,10 @@ async function handleNegotiationNeededEvent() {
   getRemoteSdp();
 }
 
-// $(document).ready(function() {
-//   $('#' + suuid).addClass('active');
-//   getCodecInfo();
-// });
-
-
+$(document).ready(function() {
+  $('#' + suuid).addClass('active');
+  getCodecInfo();
+});
 
 
 function getCodecInfo() {

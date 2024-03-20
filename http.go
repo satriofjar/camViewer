@@ -24,6 +24,7 @@ func serveHTTP() {
 	router := gin.Default()
 	router.LoadHTMLGlob("web/templates/*")
 	router.GET("/", HTTPAPIServerIndex)
+	router.GET("/stream/floor/:uuid", HTTPAPIServerFloor)
 	// router.GET("/stream/category/:floor", HTTPAPIServerCategory)
 	router.GET("/stream/player/:uuid", HTTPAPIServerStreamPlayer)
 	router.GET("/stream/thumbnail/:uuid", HTTPAPIServerThumbnail)
@@ -41,15 +42,34 @@ func serveHTTP() {
 func HTTPAPIServerIndex(c *gin.Context) {
 	_, all := Config.list()
 	sort.Strings(all)
+	// some := Config.getFloor(c.Param("uuid"))
+	// streams := Config.ListStreamsByFloor(some)
 	if len(all) > 0 {
+		// c.HTML(http.StatusOK, "main.tmpl", gin.H{
+		// 	"port":  Config.Server.HTTPPort,
+		// 	"suuid": c.Param("uuid"),
+		// 	// "suuidMap": streams,
+		// 	"suuidMap": all,
+		// 	"version":  time.Now().String(),
+		// })
 		c.Header("Cache-Control", "no-cache, max-age=0, must-revalidate, no-store")
-		c.Redirect(http.StatusMovedPermanently, "stream/player/"+all[0])
+		// c.Redirect(http.StatusMovedPermanently, "stream/player/"+all[0])
+		c.Redirect(http.StatusMovedPermanently, "/stream/floor/lantai_1")
 	} else {
 		c.HTML(http.StatusOK, "index.tmpl", gin.H{
 			"port":    Config.Server.HTTPPort,
 			"version": time.Now().String(),
 		})
 	}
+}
+
+func HTTPAPIServerFloor(c *gin.Context) {
+	streams := Config.ListStreamsByFloor(c.Param("uuid"))
+	c.HTML(http.StatusOK, "main.tmpl", gin.H{
+		"port":     Config.Server.HTTPPort,
+		"suuidMap": streams,
+		"version":  time.Now().String(),
+	})
 }
 
 // HTTPAPIServerStreamPlayer stream player
