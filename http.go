@@ -42,16 +42,7 @@ func serveHTTP() {
 func HTTPAPIServerIndex(c *gin.Context) {
 	_, all := Config.list()
 	sort.Strings(all)
-	// some := Config.getFloor(c.Param("uuid"))
-	// streams := Config.ListStreamsByFloor(some)
 	if len(all) > 0 {
-		// c.HTML(http.StatusOK, "main.tmpl", gin.H{
-		// 	"port":  Config.Server.HTTPPort,
-		// 	"suuid": c.Param("uuid"),
-		// 	// "suuidMap": streams,
-		// 	"suuidMap": all,
-		// 	"version":  time.Now().String(),
-		// })
 		c.Header("Cache-Control", "no-cache, max-age=0, must-revalidate, no-store")
 		// c.Redirect(http.StatusMovedPermanently, "stream/player/"+all[0])
 		c.Redirect(http.StatusMovedPermanently, "/stream/floor/lantai_1")
@@ -65,6 +56,7 @@ func HTTPAPIServerIndex(c *gin.Context) {
 
 func HTTPAPIServerFloor(c *gin.Context) {
 	streams := Config.ListStreamsByFloor(c.Param("uuid"))
+	sort.Strings(streams)
 	c.HTML(http.StatusOK, "main.tmpl", gin.H{
 		"port":     Config.Server.HTTPPort,
 		"suuidMap": streams,
@@ -115,12 +107,6 @@ func generateThumbnail(url string) ([]byte, error) {
 
 	return out.Bytes(), nil
 }
-
-// func HTTPAPIServerCategory(c *gin.Context) {
-// 	streams := Config.ListStreamsByFloor(c.Param("floor"))
-// 	// log.Println(streams)
-// 	c.IndentedJSON(http.StatusOK, streams)
-// }
 
 // HTTPAPIServerStreamCodec stream codec
 func HTTPAPIServerStreamCodec(c *gin.Context) {
