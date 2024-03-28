@@ -87,26 +87,63 @@ func HTTPAPIServerThumbnail(c *gin.Context) {
 		return
 	}
 
-	thumbnail, err := generateThumbnail(url)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
+	// Membuat channel untuk mengirim hasil thumbnail dan error
+	thumbnailChan := make(chan []byte)
+	errorChan := make(chan error)
 
-	c.Data(http.StatusOK, "image/jpeg", thumbnail)
+	// Menjalankan fungsi generateThumbnail secara konkurensi
+	go generateThumbnail(url, thumbnailChan, errorChan)
+
+	// Menggunakan select untuk menunggu hasil thumbnail atau error
+	select {
+	case thumbnail := <-thumbnailChan:
+		c.Data(http.StatusOK, "image/jpeg", thumbnail)
+	case err := <-errorChan:
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+	}
 }
 
-func generateThumbnail(url string) ([]byte, error) {
-	cmd := exec.Command("ffmpeg", "-i", url, "-vf", "thumbnail,scale=320:240", "-frames:v", "1", "-f", "image2", "-")
+func generateThumbnail(url string, thumbnailChan chan []byte, errorChan chan error) {
+	// cmd := exec.Command("ffmpeg", "-i", url, "-vf", "thumbnail,scale=320:240", "-frames:v", "1", "-f", "image2", "-")
+	cmd := exec.Command("ffmpeg", "-i", url, "-vframes", "1", "-ss", "00:00:01", "-s", "320x240", "-f", "image2", "-")
 	var out bytes.Buffer
 	cmd.Stdout = &out
 	err := cmd.Run()
 	if err != nil {
-		return nil, fmt.Errorf("failed to generate thumbnail: %v", err)
+		errorChan <- fmt.Errorf("failed to generate thumbnail: %v", err)
+		return
 	}
 
-	return out.Bytes(), nil
+	// Mengirim hasil thumbnail ke channel
+	thumbnailChan <- out.Bytes()
 }
+
+// func HTTPAPIServerThumbnail(c *gin.Context) {
+// 	url := Config.getUrl(c.Param("uuid"))
+// 	if url == "" {
+// 		c.JSON(http.StatusBadRequest, gin.H{"error": "URL is required"})
+// 		return
+// 	}
+// 	thumbnail, err := generateThumbnail(url)
+// 	if err != nil {
+// 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+// 		return
+// 	}
+
+// 	c.Data(http.StatusOK, "image/jpeg", thumbnail)
+// }
+
+// func generateThumbnail(url string) ([]byte, error) {
+// 	cmd := exec.Command("ffmpeg", "-i", url, "-vf", "thumbnail,scale=320:240", "-frames:v", "1", "-f", "image2", "-")
+// 	var out bytes.Buffer
+// 	cmd.Stdout = &out
+// 	err := cmd.Run()
+// 	if err != nil {
+// 		return nil, fmt.Errorf("failed to generate thumbnail: %v", err)
+// 	}
+
+// 	return out.Bytes(), nil
+// }
 
 // HTTPAPIServerStreamCodec stream codec
 func HTTPAPIServerStreamCodec(c *gin.Context) {
